@@ -139,6 +139,6 @@ No database is required right now.
 - Solo rooms are private and do not appear on the public room board.
 - The spelling word banks are loaded from JSON files in the `data/` folder.
 
-## License
+## Play Online
 
-This project is ready for you to publish with your preferred license.
+- https://adhrit-spell-solve-arena-game.onrender.com
