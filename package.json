@@ -1,0 +1,15 @@
+{
+  "name": "word-number-race",
+  "version": "1.0.0",
+  "description": "Multiplayer spelling and math race game with Node.js and Socket.IO",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No automated tests yet\""
+  },
+  "dependencies": {
+    "express": "^5.2.1",
+    "socket.io": "^4.8.3"
+  }
+}

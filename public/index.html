@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Word & Number Race</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <section class="hero">
+        <div class="hero-toolbar">
+          <button id="soundToggleBtn" class="ghost hero-toggle">Sound On</button>
+        </div>
+        <p class="eyebrow">Realtime Multiplayer Browser Game</p>
+        <h1>Word & Number Race</h1>
+        <p class="hero-copy">
+          Create a room, choose a race mode, and compete live with up to six players while
+          spectators watch the leaderboard update in real time.
+        </p>
+      </section>
+
+      <section class="panel lobby-panel" id="entryPanel">
+        <h2>Join The Lobby</h2>
+        <label class="field">
+          <span>Your Name</span>
+          <input id="nameInput" type="text" maxlength="20" placeholder="Enter your name" />
+        </label>
+
+        <div class="field">
+          <span>Player Color</span>
+          <div id="avatarColorPicker" class="avatar-picker">
+            <button type="button" class="color-swatch" data-color-swatch="#0f7c91" aria-label="Teal"></button>
+            <button type="button" class="color-swatch" data-color-swatch="#f28b50" aria-label="Orange"></button>
+            <button type="button" class="color-swatch" data-color-swatch="#f6c453" aria-label="Gold"></button>
+            <button type="button" class="color-swatch" data-color-swatch="#15895c" aria-label="Green"></button>
+            <button type="button" class="color-swatch" data-color-swatch="#d54d45" aria-label="Red"></button>
+            <button type="button" class="color-swatch" data-color-swatch="#3d6fd1" aria-label="Blue"></button>
+            <button type="button" class="color-swatch" data-color-swatch="#d96aa7" aria-label="Pink"></button>
+            <button type="button" class="color-swatch" data-color-swatch="#8c6a43" aria-label="Brown"></button>
+          </div>
+        </div>
+
+        <label class="field">
+          <span>Room Code</span>
+          <input
+            id="roomCodeInput"
+            type="text"
+            maxlength="6"
+            placeholder="Only needed for join or spectate"
+          />
+        </label>
+
+        <div class="action-grid">
+          <button id="createRoomBtn" class="primary">Create Room</button>
+          <button id="soloRoomBtn">Play Solo</button>
+          <button id="joinRoomBtn">Join As Player</button>
+          <button id="spectateRoomBtn">Join As Spectator</button>
+        </div>
+
+        <p class="helper-text">
+          Rules: the host picks the mode, rooms allow up to 6 players, matches need at least 2
+          active players, no new players can join after a match starts, and solo practice rooms
+          stay private.
+        </p>
+
+        <section class="server-browser">
+          <div class="server-browser-header">
+            <div>
+              <p class="eyebrow">Available Servers</p>
+              <h3>Jump Into A Room</h3>
+            </div>
+            <p class="server-browser-copy">
+              Enter your name once, then join or spectate any live room without typing a room
+              code.
+            </p>
+          </div>
+
+          <div id="availableRoomsBoard" class="server-board">
+            <div class="board-empty">No servers are open yet. Create the first room.</div>
+          </div>
+        </section>
+
+        <section class="leaderboard-section">
+          <div class="server-browser-header">
+            <div>
+              <p class="eyebrow">Global Leaderboard</p>
+              <h3>Top Players</h3>
+            </div>
+            <p class="server-browser-copy">
+              Wins, top scores, and fastest spelling times update across every room.
+            </p>
+          </div>
+
+          <div id="entryLeaderboard" class="leaderboard-grid">
+            <div class="board-empty">Leaderboard updates after players finish matches.</div>
+          </div>
+        </section>
+      </section>
+
+      <section class="panel room-panel hidden" id="roomPanel">
+        <header class="room-header">
+          <div>
+            <p class="eyebrow">Room</p>
+            <div class="room-code-row">
+              <h2 id="roomCodeLabel">-----</h2>
+              <button id="copyRoomBtn" class="ghost">Copy Code</button>
+            </div>
+          </div>
+          <div class="room-meta">
+            <div class="meta-pill">
+              <span>Status</span>
+              <strong id="statusLabel">Lobby</strong>
+            </div>
+            <div class="meta-pill">
+              <span>Type</span>
+              <strong id="roomTypeLabel">Multiplayer</strong>
+            </div>
+            <div class="meta-pill">
+              <span>Mode</span>
+              <strong id="modeLabel">Not picked</strong>
+            </div>
+            <div class="meta-pill">
+              <span>Difficulty</span>
+              <strong id="difficultyLabel">Medium</strong>
+            </div>
+            <button id="leaveRoomBtn" class="ghost danger">Leave Room</button>
+          </div>
+        </header>
+
+        <div id="noticeBanner" class="notice hidden"></div>
+
+        <div class="room-layout">
+          <section class="panel surface game-panel">
+            <div id="hostControls" class="host-controls hidden">
+              <h3>Host Controls</h3>
+              <p id="hostControlsCopy" class="host-copy">
+                Pick the difficulty and race type, then start when at least two players are ready.
+              </p>
+              <div class="host-choice-group">
+                <p class="eyebrow">Difficulty</p>
+                <div class="action-grid compact">
+                  <button id="easyDifficultyBtn">Easy</button>
+                  <button id="mediumDifficultyBtn">Medium</button>
+                  <button id="hardDifficultyBtn">Hard</button>
+                </div>
+              </div>
+              <div class="host-choice-group">
+                <p class="eyebrow">Game Mode</p>
+                <div class="action-grid compact">
+                  <button id="mathModeBtn">Math Equation Race</button>
+                  <button id="spellingModeBtn">Spelling Race</button>
+                </div>
+              </div>
+              <div class="host-choice-group">
+                <p class="eyebrow">Room Settings</p>
+                <div class="settings-grid">
+                  <label class="field inline-field">
+                    <span>Round Timer (sec)</span>
+                    <input id="roundDurationInput" type="number" min="10" max="60" step="5" />
+                  </label>
+                  <label class="field inline-field">
+                    <span>Max Rounds</span>
+                    <input id="maxRoundsInput" type="number" min="3" max="30" step="1" />
+                  </label>
+                  <label class="toggle-field">
+                    <input id="eliminationsCheckbox" type="checkbox" />
+                    <span>Eliminations Enabled</span>
+                  </label>
+                </div>
+                <div class="action-grid compact">
+                  <button id="applySettingsBtn" class="ghost">Apply Settings</button>
+                </div>
+              </div>
+              <div class="action-grid compact">
+                <button id="startMatchBtn" class="primary">Start Match</button>
+                <button id="playAgainBtn" class="ghost hidden">Play Again</button>
+              </div>
+            </div>
+
+            <div id="playerLobbyControls" class="player-lobby-controls hidden">
+              <h3>Your Lobby Controls</h3>
+              <p id="readyStatusText" class="host-copy">
+                Click Ready when you are set for the next match.
+              </p>
+              <div class="action-grid compact">
+                <button id="readyToggleBtn">Ready Up</button>
+              </div>
+            </div>
+
+            <div id="lobbyMessage" class="lobby-message">
+              Waiting in the lobby. The room creator needs to choose a difficulty, choose a mode,
+              and start the match.
+            </div>
+
+            <div id="gameArea" class="game-area hidden">
+              <div class="round-strip">
+                <div>
+                  <p class="eyebrow">Round</p>
+                  <h3 id="roundNumberLabel">1</h3>
+                </div>
+                <div>
+                  <p class="eyebrow">Level Drain</p>
+                  <h3 id="drainLabel">-1</h3>
+                </div>
+                <div>
+                  <p class="eyebrow">Time Left</p>
+                  <h3 id="timerLabel">20.000s</h3>
+                </div>
+              </div>
+
+              <div class="challenge-card">
+                <p class="eyebrow">Prompt</p>
+                <h2 id="challengePrompt">Waiting for the next round...</h2>
+              </div>
+
+              <div id="playBox" class="play-box hidden">
+                <label class="field">
+                  <span>Your Answer</span>
+                  <input id="answerInput" type="text" placeholder="Type your answer here" />
+                </label>
+                <div id="powerUpBar" class="powerup-bar hidden">
+                  <button id="doublePowerBtn" type="button">Double x1</button>
+                  <button id="shieldPowerBtn" type="button">Shield x1</button>
+                  <button id="freezePowerBtn" type="button">Freeze x1</button>
+                </div>
+                <div class="action-row">
+                  <button id="submitAnswerBtn" class="primary">Submit Answer</button>
+                  <span id="submissionState" class="submission-state"></span>
+                </div>
+              </div>
+
+              <div id="spectatorBox" class="spectator-box hidden">
+                You are watching this round. Spectators and eliminated players can follow the live
+                scoreboard while the racers finish.
+              </div>
+            </div>
+
+            <div class="panel surface round-results" id="roundResults">
+              <h3>Round Results</h3>
+              <div id="roundResultsBody" class="results-empty">
+                No round results yet. Start the match to begin racing.
+              </div>
+            </div>
+
+            <div class="panel surface winner-box hidden" id="winnerBox">
+              <h3 id="winnerHeading">Winner</h3>
+              <p id="winnerText"></p>
+            </div>
+          </section>
+
+          <aside class="panel surface sidebar">
+            <section>
+              <h3>Players</h3>
+              <div id="playersList" class="list-stack"></div>
+            </section>
+
+            <section>
+              <h3>Spectators</h3>
+              <div id="spectatorsList" class="list-stack empty-list">No spectators yet.</div>
+            </section>
+
+            <section>
+              <h3>Match Settings</h3>
+              <div id="settingsSummary" class="list-stack"></div>
+            </section>
+
+            <section>
+              <h3>Global Leaderboard</h3>
+              <div id="roomLeaderboard" class="leaderboard-grid compact-board">
+                <div class="board-empty">Leaderboard updates after players finish matches.</div>
+              </div>
+            </section>
+
+            <section>
+              <h3>Match History</h3>
+              <div id="historyList" class="list-stack empty-list">
+                No rounds have been completed in this room yet.
+              </div>
+            </section>
+
+            <section class="chat-section">
+              <h3>Room Chat</h3>
+              <div id="chatMessages" class="chat-messages empty-chat">
+                No chat messages yet. Say hello to the room.
+              </div>
+              <div class="chat-compose">
+                <input
+                  id="chatInput"
+                  type="text"
+                  maxlength="200"
+                  autocomplete="off"
+                  placeholder="Type a message"
+                />
+                <button id="sendChatBtn">Send</button>
+              </div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <p id="toast" class="toast hidden"></p>
+    </main>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/client.js"></script>
+  </body>
+</html>
